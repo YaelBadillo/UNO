@@ -4,8 +4,32 @@ public class Juego {
 		
 		Carta cartas[] = declararCartas();
 		
-		for(int i = 0; i < cartas.length;i++)
-			System.out.print(cartas[i] + "\n");
+		//Barajeo de cartas
+		Carta cRevueltas[] = new Carta[108];//Intanciamos otro arreglo de objetos al cual le vamos a pasar las cartas de forma aleatoria
+		
+		int i = 0; //Declaramos una variable 0 a la cual le vamos a asignar la primera carta
+		
+		cRevueltas[i] = cartas[(int)(Math.random()*108)];
+		
+		//Asignacion de cartas aleatorias del 1 al 107 de forma aleatoria
+		for(i = 1; i < cartas.length; i++){
+			cRevueltas[i] = cartas[(int)(Math.random()*108)];
+			/*si un valor del arreglo "cartas" se vuelve a repetir, se le restara un numero para evitar
+			  cartas repetidas*/
+			for(int j = 0; j < i; j++){
+				if(cRevueltas[i] == cRevueltas[j]){
+					i--;
+				}
+				
+			}
+			
+		}
+		//comprobacion de cartas revueltas y no repetidas
+		int cont = 1;
+		for(int k = 0; k < cartas.length;k++){
+			System.out.print(cRevueltas[k]+""+ cont + "\n");
+			cont++;
+		}
 					
 	}
 	
