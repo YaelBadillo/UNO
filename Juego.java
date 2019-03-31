@@ -3,7 +3,7 @@ public class Juego {
 	public static void main(String[] args){
 		
 		Carta cartas[] = declararCartas();
-		
+		System.out.println("YA");
 		for(int i = 0; i < cartas.length;i++)
 			System.out.print(cartas[i] + "\n");
 					
