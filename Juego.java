@@ -1,14 +1,19 @@
+import java.util.Scanner;
 
 public class Juego {
 	public static void main(String[] args){
+		Scanner entrada = new Scanner(System.in);      //Se declara el objeto Scanner
 		
-		Carta cartas[] = declararCartas();
+		Carta cartas[] = barajearCartas();             //Se declaran todas las cartas
+		int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
+		boolean ganador = false;                       //El juego inicia sin ganador
 		
+		//Imprimir cartas	
 		for(int i = 0; i < cartas.length;i++)
-			System.out.print(cartas[i] + "\n");
-					
+			System.out.print(cartas[i] + "\n" + i + "\n");		
 	}
 	
+	//Funcion que modela todas las cartas
 	public static Carta[] declararCartas(){
 		Carta cartas[] = new Carta[108];
 		int numeroDeCarta = 0;
@@ -81,6 +86,53 @@ public class Juego {
 		}
 		
 		
-		return cartas;	
+		return cartas;	//Regresa el arreglo cartas[]
+	}
+	
+	//Funcion que limpia la consola
+	public static void limpiarConsola(){
+		for(int i = 0; i < 50; i++)
+			System.out.println();
+	}
+	
+	//Funcion para definir el numero de jugadores
+	public static int numeroDeJugadores(){
+		Scanner entrada = new Scanner(System.in);
+		int jugadores = 0; 
+		
+		while(jugadores > 4 || jugadores < 2){
+			System.out.println("Numero de jugadores: ");
+			jugadores = entrada.nextInt();
+			
+			if(jugadores > 4 || jugadores < 2){
+				limpiarConsola();
+				System.out.println("ERROR: Numero de jugadores ivalido.\n"
+						+ "Recuerde que solo puede haber de 2 a 4 jugadores.\n");
+			}			
+		}
+		
+		return jugadores;
+	}
+	
+	//Funcion para barajear las cartas
+	public static Carta[] barajearCartas(){
+		Carta cartas[] = declararCartas();
+		Carta cartasRevueltas[] = new Carta[108];//Intanciamos otro arreglo de objetos al cual le vamos a pasar las cartas de forma aleatoria
+
+		int i = 0; //Declaramos una variable 0 a la cual le vamos a asignar la primera carta
+
+		cartasRevueltas[i] = cartas[(int)(Math.random()*108)];
+
+		//Asignacion de cartas aleatorias del 1 al 107 de forma aleatoria
+		for(i = 1; i < cartas.length; i++){
+			cartasRevueltas[i] = cartas[(int)(Math.random()*108)];
+		  /*si un valor del arreglo "cartas" se vuelve a repetir, se le restara un numero para evitar
+		    cartas repetidas*/
+		  for(int j = 0; j < i; j++)
+		    if(cartasRevueltas[i] == cartasRevueltas[j])
+		      i--;
+		}
+		
+		return cartasRevueltas;
 	}
 }
