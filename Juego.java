@@ -4,7 +4,7 @@ public class Juego {
 	public static void main(String[] args){
 		Scanner entrada = new Scanner(System.in);      //Se declara el objeto Scanner
 		
-		Carta cartas[] = barajearCartas();             //Se declaran todas las cartas
+		Carta cartas[] = barajearCartas();             //Se declaran todas las cartas ya barajeadas
 		int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
 		boolean ganador = false;                       //El juego inicia sin ganador
 		
@@ -116,23 +116,22 @@ public class Juego {
 	
 	//Funcion para barajear las cartas
 	public static Carta[] barajearCartas(){
-		Carta cartas[] = declararCartas();
-		Carta cartasRevueltas[] = new Carta[108];//Intanciamos otro arreglo de objetos al cual le vamos a pasar las cartas de forma aleatoria
-
-		int i = 0; //Declaramos una variable 0 a la cual le vamos a asignar la primera carta
-
-		cartasRevueltas[i] = cartas[(int)(Math.random()*108)];
-
-		//Asignacion de cartas aleatorias del 1 al 107 de forma aleatoria
-		for(i = 1; i < cartas.length; i++){
-			cartasRevueltas[i] = cartas[(int)(Math.random()*108)];
-		  /*si un valor del arreglo "cartas" se vuelve a repetir, se le restara un numero para evitar
-		    cartas repetidas*/
-		  for(int j = 0; j < i; j++)
-		    if(cartasRevueltas[i] == cartasRevueltas[j])
-		      i--;
+		Carta cartas[] = declararCartas();//Arreglo Cartas ordenadas
+		Carta cartasRevueltas[] = new Carta[108];//Nuevo Arreglo Cartas barajeadas
+		
+		//Pasamos las cartas de un arreglo a otro de forma aleatoria
+		for(int i = 0; i < cartas.length; i++){
+			cartasRevueltas[i] = cartas[(int)(Math.random()*(cartas.length))];
+			
+			//Revision de que las cartas no sean repetidas
+			for(int j = 0; i>0 && j < i; j++)
+				
+				//Sí una carta es repetida con la ultima, se le vuelve a asignar otra a esta
+				if(cartasRevueltas[i] == cartasRevueltas[j])
+					i--;
 		}
 		
 		return cartasRevueltas;
 	}
+	
 }
