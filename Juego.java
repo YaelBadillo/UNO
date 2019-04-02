@@ -5,12 +5,18 @@ public class Juego {
 		Scanner entrada = new Scanner(System.in);      //Se declara el objeto Scanner
 		
 		Carta cartas[] = barajearCartas();             //Se declaran todas las cartas ya barajeadas
-		int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
+		//int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
+		Jugador jugador[] = mazoDeJugadores();
 		boolean ganador = false;                       //El juego inicia sin ganador
 		
 		//Imprimir cartas	
-		for(int i = 0; i < cartas.length;i++)
-			System.out.print(cartas[i] + "\n" + i + "\n");		
+		for(int i = 0; i < 7;i++){
+			System.out.println(jugador[0].mazo[i]);
+		}
+		for(int i = 0; i < 108; i++){
+			System.out.print(cartas[i]);
+			System.out.println(i);
+		}
 	}
 	
 	//Funcion que modela todas las cartas
@@ -132,6 +138,43 @@ public class Juego {
 		}
 		
 		return cartasRevueltas;
+	}
+	
+	//Funcion para asignar las primeras 7 cartas a cada jugador
+	public static Jugador[] mazoDeJugadores(){
+		Carta cartas[] = barajearCartas();
+		
+		int jugadores = numeroDeJugadores();
+		
+		Jugador jugador[] = new Jugador[jugadores];
+		
+		for(int i = 0; i < jugadores; i++){
+			jugador[i] = new Jugador(i+1);
+		}
+		
+		int cont=107;
+		int cont2=0;
+		for(int i = 0; i < 7; i++){
+			jugador[0].mazo[cont2] = cartas[cont];
+			
+			cont--;
+			
+			jugador[1].mazo[cont2] = cartas[cont];
+			cont--;
+			
+			if(jugadores>2){
+				jugador[2].mazo[cont2] = cartas[cont];
+				cont--;
+				
+				if(jugadores>3){
+					jugador[3].mazo[cont2] = cartas[cont];
+					cont--;
+				}
+			}
+			cont2++;
+		}
+	
+		return jugador;
 	}
 	
 }
