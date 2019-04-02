@@ -8,9 +8,19 @@ public class Juego {
 		int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
 		boolean ganador = false;                       //El juego inicia sin ganador
 		
-		//Imprimir cartas	
+		//int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
+		Jugador jugador[] = mazoDeJugadores(jugadores, cartas);
+		
+		//Imprime las cartas del mazo principal
+		System.out.println("Cartas del mazo principal\n");
 		for(int i = 0; i < cartas.length;i++)
-			System.out.print(cartas[i] + "\n" + i + "\n");		
+			System.out.println(cartas[i]);
+		
+		//Imprime las cartas del jugador
+		System.out.println("\nCartas del jugador\n");
+		for(int i = 0; i < 7;i++)
+			System.out.println(jugador[0].mazo[i]);
+		
 	}
 	
 	//Funcion que modela todas las cartas
@@ -134,4 +144,40 @@ public class Juego {
 		return cartasRevueltas;
 	}
 	
+	//Funcion para asignar las primeras 7 cartas a cada jugador
+	public static Jugador[] mazoDeJugadores(int NumeroJugadores, Carta MazoCartas[]){
+		Carta cartas[] = MazoCartas;
+
+		int jugadores = NumeroJugadores;
+
+		Jugador jugador[] = new Jugador[jugadores];
+
+		for(int i = 0; i < jugadores; i++){
+			jugador[i] = new Jugador(i+1);
+		}
+
+		int cont=107;
+		int cont2=0;
+		for(int i = 0; i < 7; i++){
+			jugador[0].mazo[cont2] = cartas[cont];
+
+			cont--;
+
+			jugador[1].mazo[cont2] = cartas[cont];
+			cont--;
+
+			if(jugadores>2){
+				jugador[2].mazo[cont2] = cartas[cont];
+				cont--;
+
+				if(jugadores>3){
+					jugador[3].mazo[cont2] = cartas[cont];
+					cont--;
+				}
+			}
+			cont2++;
+		}
+
+		return jugador;
+	}
 }
