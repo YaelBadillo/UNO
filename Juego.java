@@ -4,12 +4,12 @@ public class Juego {
 	public static void main(String[] args){
 		Scanner entrada = new Scanner(System.in);      //Se declara el objeto Scanner
 		
-		Carta cartas[] = barajearCartas();             //Se declaran todas las cartas ya barajeadas
+		Carta cartas[] = barajarCartas();             //Se declaran todas las cartas ya barajeadas
 		int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
 		boolean ganador = false;                       //El juego inicia sin ganador
 		
 		//int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
-		Jugador jugador[] = mazoDeJugadores(jugadores, cartas);
+		Jugador jugador[] = mazoDeJugadores(jugadores, cartas); //Se declaran los jugadores
 		
 		//Imprime las cartas del mazo principal
 		System.out.println("Cartas del mazo principal\n");
@@ -124,8 +124,8 @@ public class Juego {
 		return jugadores;
 	}
 	
-	//Funcion para barajear las cartas
-	public static Carta[] barajearCartas(){
+	//Funcion para barajar las cartas
+	public static Carta[] barajarCartas(){
 		Carta cartas[] = declararCartas();//Arreglo Cartas ordenadas
 		Carta cartasRevueltas[] = new Carta[108];//Nuevo Arreglo Cartas barajeadas
 		
@@ -145,33 +145,33 @@ public class Juego {
 	}
 	
 	//Funcion para asignar las primeras 7 cartas a cada jugador
-	public static Jugador[] mazoDeJugadores(int NumeroJugadores, Carta MazoCartas[]){
-		Carta cartas[] = MazoCartas;
+	public static Jugador[] mazoDeJugadores(int NumeroJugadores, Carta MazoCartas[]){ //Se pasan las cartas y numero de jugador declararado en el main
+		Carta cartas[] = MazoCartas;   //Se asisgnan las cartas del main a cartas
 
-		int jugadores = NumeroJugadores;
+		int jugadores = NumeroJugadores; //Se asisgna el numero de jugadores del main a jugadores
 
-		Jugador jugador[] = new Jugador[jugadores];
+		Jugador jugador[] = new Jugador[jugadores];//Instanciamos un arreglo de objetos del objeto Jugador, con el numero de jugadores
 
-		for(int i = 0; i < jugadores; i++){
+		for(int i = 0; i < jugadores; i++){//Declaramos el numero de jugadores del arreglo Jugador
 			jugador[i] = new Jugador(i+1);
 		}
 
-		int cont=107;
-		int cont2=0;
+		int cont=107;//Numero de objeto del arreglo cartas
+		int cont2=0;//Numero de objeto del mazo, dentro del arreglo jugador
+		//Asignacion de cartas del arreglo cartas al arreglo mazo, dentro de cada arreglo jugador
 		for(int i = 0; i < 7; i++){
-			jugador[0].mazo[cont2] = cartas[cont];
-
+			jugador[0].mazo[cont2] = cartas[cont];//Jugador numero 1
 			cont--;
 
-			jugador[1].mazo[cont2] = cartas[cont];
+			jugador[1].mazo[cont2] = cartas[cont];//jugador numero 2
 			cont--;
 
-			if(jugadores>2){
-				jugador[2].mazo[cont2] = cartas[cont];
+			if(jugadores>2){//Asignacion de cartas al jugador 3(solo si son 3 o 4 jugadores)
+				jugador[2].mazo[cont2] = cartas[cont];//jugador numero 3
 				cont--;
 
-				if(jugadores>3){
-					jugador[3].mazo[cont2] = cartas[cont];
+				if(jugadores>3){//Asignacion de cartas al jugador 4(solo si son 4 jugadores)
+					jugador[3].mazo[cont2] = cartas[cont];//Jugador numero 4
 					cont--;
 				}
 			}
