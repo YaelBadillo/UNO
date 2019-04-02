@@ -9,7 +9,7 @@ public class Juego {
 		boolean ganador = false;                       //El juego inicia sin ganador
 		
 		//int jugadores = numeroDeJugadores();           //Se declara el numero de jugadores
-		Jugador jugador[] = mazoDeJugadores(jugadores, cartas);
+		Jugador jugador[] = mazoDeJugadores(jugadores, cartas); //Se declaran los jugadores
 		
 		//Imprime las cartas del mazo principal
 		System.out.println("Cartas del mazo principal\n");
@@ -145,10 +145,10 @@ public class Juego {
 	}
 	
 	//Funcion para asignar las primeras 7 cartas a cada jugador
-	public static Jugador[] mazoDeJugadores(int NumeroJugadores, Carta MazoCartas[]){
-		Carta cartas[] = MazoCartas;
+	public static Jugador[] mazoDeJugadores(int NumeroJugadores, Carta MazoCartas[]){ //Se pasan las cartas y numero de jugador declararado en el main
+		Carta cartas[] = MazoCartas;   //Se asisgnan las cartas del main a cartas
 
-		int jugadores = NumeroJugadores;
+		int jugadores = NumeroJugadores; //Se asisgna el numero de jugadores del main a jugadores
 
 		Jugador jugador[] = new Jugador[jugadores];//Instanciamos un arreglo de objetos del objeto Jugador, con el numero de jugadores
 
