@@ -1,8 +1,8 @@
 
 public class Carta {
-	private String color;
-	private int numero;
-	private String efecto;
+	public String color;
+	public int numero;
+	public String efecto;
 	
 	/*
 	 Efectos
