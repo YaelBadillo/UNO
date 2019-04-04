@@ -443,11 +443,12 @@ public class Juego {
 	
 	//Imprime la bienvenida
 	public static void imprimirBienvenida(){
-		System.out.print("Hola bienvenidos a: \n\n");
-		System.out.print("   __  ___   ______\n" +
+		System.out.print("Hola bienvenidos a:\n" +
+						 "   __  ___   ______\n" +
 						 "  / / / / | / / __ \n" +
 				         " / / / /  |/ / / / /\n" +
 						 "/ /_/ / /|  / /_/ /\n" +
-				         "\\____/_/ |_/\\____/\n\n");
+				         "\\____/_/ |_/\\____/\n\n" +
+						 "Por Yael y Erik\n\n");
 	}
 }
