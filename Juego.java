@@ -263,9 +263,8 @@ public class Juego {
 	
 	//Imrime las cartas del jugador
 	public static void imprimirCartasJugador(int jugadorNumero, Jugador jugadores[]){
-		System.out.print("\nCartas de " + jugadores[jugadorNumero].nombre +"\n");
-		
 		int cont = 0;
+		
 		for(int i = 0; jugadores[jugadorNumero].mazo[i] != null; i++){//Imprime las cartas del jugador en turno
 			cont++;
 		}
