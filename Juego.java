@@ -263,89 +263,104 @@ public class Juego {
 	
 	//Imrime las cartas del jugador
 	public static void imprimirCartasJugador(int jugadorNumero, Jugador jugadores[]){
+		System.out.print("\nCartas de " + jugadores[jugadorNumero].nombre +"\n");
+		
 		int cont = 0;
-		//System.out.println("\nCartas de " + jugadores[jugadorNumero].nombre +"\n");
-
 		for(int i = 0; jugadores[jugadorNumero].mazo[i] != null; i++){//Imprime las cartas del jugador en turno
 			cont++;
 		}
 		
-		String colorCarta = "";
-		
 		while(true){
-			for(int j = 0; j<cont; j++)
+	
+			for(int j = 0; j < cont; j++){
 				System.out.print(" ________   ");
+				
+				if(j == 9){
+					break;
+				}
+			}
 			
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto != "CambioSentido")
 				 	System.out.print("|        |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido")
 					System.out.print("|   ^    |  ");
-
-				if(j==9){
+					
+				if(j == 9){
 					break;
 				}
+				
 				cartaEntrada++;
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "Normal")
 					System.out.print("|   "+jugadores[NumeroDeJugador].mazo[cartaEntrada].numero+"    |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "RobaDos")
 					System.out.print("|   +2   |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido")
 					System.out.print("|   ||   |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "PierdeTurno")
 					System.out.print("|  (/0)  |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor")
 					System.out.print("| Cambio |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor4")
 					System.out.print("| Cambio |  ");
-
-				if(j==9){
+					
+				if(j == 9){
 					break;
 				}
+				
 				cartaEntrada++;
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "Normal" 
 						|| jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "RobaDos" 
 						|| jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "PierdeTurno")
 					System.out.print("|        |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido")
 					System.out.print("|    v   |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor")
 					System.out.print("| Color  |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor4")
 					System.out.print("| Color  |  ");
-
-
-				if(j==9){
+					
+				if(j == 9){
 					break;
 				}
-				cartaEntrada++;
+				
+				cartaEntrada++;	
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-
-
-			for(int j = 0; j<cont; j++){
-
-
+			
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "Normal"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -358,8 +373,11 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "RobaDos"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -372,9 +390,11 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -387,9 +407,11 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "PierdeTurno"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -402,32 +424,56 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor"){
 					System.out.print("|        |  ");
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor4"){
-					System.out.print("|   +4   |");
+					System.out.print("|   +4   |  ");
 				}
-
-				if(j==9){
+			
+				if(j == 9){
 					break;
 				}
+				
 				cartaEntrada++;
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
 				System.out.print("|________|  ");
-				if(j==9){
+				
+				if(j == 9){
 					break;
 				}
 			}
+			
 			System.out.println();
-			cont=cont-10;
-			if(cont<=0){
+			
+			for(int j = 1; j <= cont; j++){
+				
+				if(j != 10){
+					System.out.print("    "+j+"       ");
+				}
+				
+				if(j == 10){
+					System.out.print("    "+10+"      ");
+				}
+				
+				if(j == 9){
+					break;
+				}	
+			}
+			
+			System.out.println();
+			
+			cont = cont - 10;
+			if(cont <= 0){
 				break;
 			}
 		}
