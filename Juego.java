@@ -2,24 +2,29 @@ import java.util.Scanner;
 public class Juego {
 	
 	//Variables Globales
-	public static Carta cartas[] = barajarCartas();  //Se declaran todas las cartas ya barajeadas
+	public static Carta cartas[] = new Carta[108];  //Se declara el arreglo cartas
+	public static Carta cartasVolteadas[] = new Carta[108];  //Se declara el arreglo de cartas volteadas
+	public static Jugador jugadores[] = new Jugador[3]; //Se declaran los jugadores y se les da 7 cartas
 	public static int NumeroDeJugadores = 0;         //Inicializamos el numero de jugadores
 	public static int NumeroDeJugador = 0;           //Inicializamos el numero de jugadore
 	public static int cartaEntrada;                  //Creamos carta entrada
 	
 	public static void main(String[] args){
 		Scanner entrada = new Scanner(System.in);      //Se declara el objeto Scanner
-		boolean ganador = false;                       //El juego inicia sin ganador
-		int cartaEntrada;
-		//int NumeroDeJugador = 0;
-		int nDeCartaVolteada = 0;
-		int nDeCartaRevuelta;
 		
+		boolean ganador = false;                       //El juego inicia sin ganador
+		boolean comprobarCarta = true;                //Variable que compruebas si la carta se puede poner
+		int cartaEntrada;                              //Variable para ingresar la carta
+		int nDeCartaVolteada = 0;                      //Variable que controla el indice de cartasVolteadas
+		
+		cartas = barajarCartas();                      //Se declaran todas las cartas y se barajean
+		cartasVolteadas = cartasEnJuego();             //Inicia el juego con una carta volteada
+		
+		//Inicia el juego
 		imprimirBienvenida();                          //Imprime la bienvenida
 		NumeroDeJugadores = numeroDeJugadores();              //Se declara el numero de jugadores
 
-		Jugador jugadores[] = crearJugadores(); //Se declaran los jugadores y se les da 7 cartas
-		Carta cartasVolteadas[] = cartasEnJuego();
+		jugadores = crearJugadores();              //Se declaran los jugadores y se les da 7 cartas
 		
 		limpiarConsola();
 		while(ganador == false){
@@ -28,65 +33,133 @@ public class Juego {
 				System.out.println("Carta en juego:");
 				System.out.println(cartasVolteadas[nDeCartaVolteada]);//Imprime la carta en juego
 				
-				if(cartasVolteadas[nDeCartaVolteada].efecto == "Normal"){
-					System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
-					imprimirCartasJugador(NumeroDeJugador, jugadores);
-					
-					System.out.println("Ingrese una carta ");//Pide una carta al jugador
-					cartaEntrada=entrada.nextInt() - 1;
-
-					//Si la carta no es la correcta, le vuelve a pedir otra al jugador
-					while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
-						  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
-						System.out.println("No puedes poner esa carta, pon otra");
+				comprobarCarta = comprobarCartas(NumeroDeJugador, nDeCartaVolteada);
+				
+				if(comprobarCarta == true){
+					if(cartasVolteadas[nDeCartaVolteada].efecto == "Normal"){
+						System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+						imprimirCartasJugador(NumeroDeJugador, jugadores);
+						
+						System.out.println("Ingrese una carta ");//Pide una carta al jugador
 						cartaEntrada=entrada.nextInt() - 1;
-					}
 
-					//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
-					cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
-					//Elimina la carta que eligio el jugador, de su mano
-					jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
-
-					//Recorre de posicion las cartas de la mano del jugador
-					for(int i = cartaEntrada; true; i++){
-						jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
-							if(jugadores[NumeroDeJugador].mazo[i] == null)
-								break;
+						//Si la carta no es la correcta, le vuelve a pedir otra al jugador
+						//BUG con los comodines corregido
+						if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
+							while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
+									  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
+									System.out.println("No puedes poner esa carta, pon otra");
+									cartaEntrada = entrada.nextInt() - 1;
+								}
 						}
-					nDeCartaVolteada++;
+
+						//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
+						cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
+						//Elimina la carta que eligio el jugador, de su mano
+						jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
+
+						//Recorre de posicion las cartas de la mano del jugador
+						for(int i = cartaEntrada; true; i++){
+							jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
+								if(jugadores[NumeroDeJugador].mazo[i] == null)
+									break;
+							}
+						nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
+						limpiarConsola();
+						}
 					
-					limpiarConsola();
-					}
-				if(cartasVolteadas[nDeCartaVolteada].efecto == "RobaDos"){
-					for(int i = 0; i < 2; i++){
-						System.out.print("RobaDos");
+					if(cartasVolteadas[nDeCartaVolteada].efecto == "RobaDos"){
+						for(int i = 0; i < 2; i++){
+							System.out.print("RobaDos");
+							ganador = true;
+							}
+						limpiarConsola();
+						}
+					
+					if(cartasVolteadas[nDeCartaVolteada].efecto == "CambioSentido"){
+						System.out.print("CambioSentido");
 						ganador = true;
-						}
-					limpiarConsola();
+						limpiarConsola();
 					}
-				if(cartasVolteadas[nDeCartaVolteada].efecto == "CambioSentido"){
-					System.out.print("CambioSentido");
-					ganador = true;
-					limpiarConsola();
-				}
-				if(cartasVolteadas[nDeCartaVolteada].efecto == "PierdeTurno"){
 					
-					limpiarConsola();
-					System.out.print(jugadores[NumeroDeJugador].nombre + "Pierde su turno");
-					NumeroDeJugador++;
-				}
-				if(cartasVolteadas[nDeCartaVolteada].efecto == "C-CambioColor"){
-					System.out.print("C-CambioColor");
-					ganador = true;
-				}
-				if(cartasVolteadas[nDeCartaVolteada].efecto == "C-CambioColor4"){
-					System.out.print("C-CambioColor4");
+					if(cartasVolteadas[nDeCartaVolteada].efecto == "PierdeTurno"){
+						limpiarConsola();
+						System.out.print(jugadores[NumeroDeJugador].nombre + "Pierde su turno");
+						NumeroDeJugador++;
+					}
+					
+					if(cartasVolteadas[nDeCartaVolteada].efecto == "C-CambioColor"){
+						System.out.print("C-CambioColor");
+						ganador = true;
+					}
+					
+					if(cartasVolteadas[nDeCartaVolteada].efecto == "C-CambioColor4"){
+						System.out.print("C-CambioColor4");
+						ganador = true;
+					}
+					
+				}else{
+					System.out.print("No tienes ninguna carta valida");
 					ganador = true;
 				}
 			}
 		}
 	}
 
+	//Comprueba si el jugador tiene cartas para poner
+	public static boolean comprobarCartas(int indiceJugador, int indiceCartaEnJuego){
+		boolean respuesta;
+		int contador = 0;
+		
+		//Comprueba si tiene un numero o un color para poner en cartas en juego
+		if(cartasVolteadas[indiceCartaEnJuego].efecto == "Normal"){
+			for(int i = 0; jugadores[indiceJugador].mazo[i] != null; i++){
+				if(cartasVolteadas[indiceCartaEnJuego].color == jugadores[indiceJugador].mazo[i].color ||
+				   cartasVolteadas[indiceCartaEnJuego].numero == jugadores[indiceJugador].mazo[i].numero){
+					contador++;
+				}		
+			}
+		}
+		
+		//Comprueba si tiene un color para poner en cartas en juego
+		if(cartasVolteadas[indiceCartaEnJuego].efecto == "RobaDos" ||
+		   cartasVolteadas[indiceCartaEnJuego].efecto == "CambioSentido" ||
+		   cartasVolteadas[indiceCartaEnJuego].efecto == "PierdeTurno"){
+			for(int i = 0; jugadores[indiceJugador].mazo[i] != null; i++){
+				if(cartasVolteadas[indiceCartaEnJuego].color == jugadores[indiceJugador].mazo[i].color){
+					contador++;
+				}		
+			}
+		}
+		
+		//Cuando la carta en juego es un comodin comprieba si tienes otro comodin
+		if(cartasVolteadas[indiceCartaEnJuego].efecto == "C-CambioColor" ||
+				   cartasVolteadas[indiceCartaEnJuego].efecto == "C-CambioColor4"){
+			//Comprueba si tiene un comodin
+			for(int i = 0; jugadores[indiceJugador].mazo[i] != null; i++){
+				if(jugadores[indiceJugador].mazo[i].efecto == "C-CambioColor" ||
+						jugadores[indiceJugador].mazo[i].efecto == "C-CambioColor4"){
+					contador++;
+				}		
+			}
+		}
+		
+		//Comprueba si tiene un comodin
+		for(int i = 0; jugadores[indiceJugador].mazo[i] != null; i++){
+			if(jugadores[indiceJugador].mazo[i].efecto == "C-CambioColor" ||
+					jugadores[indiceJugador].mazo[i].efecto == "C-CambioColor4"){
+				contador++;
+			}		
+		}
+			
+		if(contador != 0)
+			respuesta = true;
+		else
+			respuesta = false;
+		
+		return respuesta;
+	}
+	
 	//Funcion que modela todas las cartas
 	public static Carta[] declararCartas(){
 		Carta cartas[] = new Carta[108];
@@ -204,39 +277,40 @@ public class Juego {
 	//Funcion para crear los jugadores y asignar las primeras 7 cartas a cada jugador
 	public static Jugador[] crearJugadores(){ //Se pasan las cartas y numero de jugador declararado en el main
 		Scanner entrada = new Scanner(System.in);      //Se declara el objeto Scanner
-		Jugador jugadores[] = new Jugador[NumeroDeJugadores];//Instanciamos un arreglo de objetos del objeto Jugador, con el numero de jugadores
+		Jugador crearJugadgores[] = new Jugador[NumeroDeJugadores];//Instanciamos un arreglo de objetos del objeto Jugador, con el numero de jugadores
 		
 		String nombre = "";
-		int cont = 107;//Numero de objeto del arreglo cartas
-		int cont2 = 0;//Numero de objeto del mazo, dentro del arreglo jugador
 		
 		//Declaramos el numero de jugadores del arreglo Jugador
 		for(int i = 0; i < NumeroDeJugadores; i++){
 			System.out.println("Nombre del jugador " + (i+1));
 			nombre = entrada.nextLine();
-			jugadores[i] = new Jugador(i+1 , nombre);
+			crearJugadgores[i] = new Jugador(i , nombre);
 		}
 		
+		int ultimoIndiceCartas = IndiceUltimoElemento(cartas);//Numero de objeto del arreglo cartas
+		int ultimoIndiceMazoJugador = 0;//Numero de objeto del mazo, dentro del arreglo jugador
 		//Le damos cartas a cada jugador
 		for(int i = 1; i <= 7; i++){
-			for(int j = 0; j < jugadores.length; j++){
-				jugadores[j].mazo[cont2] = cartas[cont];
-				cartas[cont] = null;
-				cont--;
+			for(int j = 0; j < crearJugadgores.length; j++){
+				crearJugadgores[j].mazo[ultimoIndiceMazoJugador] = cartas[ultimoIndiceCartas];
+				cartas[ultimoIndiceCartas] = null;
+				ultimoIndiceCartas--;
 			}
-			cont2++;
+			ultimoIndiceMazoJugador++;
 		}
 
-		return jugadores;
+		return crearJugadgores;
 	}
-
+	
 	//Funcion para poner la primera carta del arreglo cartas barajadas, al arreglo de cartas volteadas para empezar a jugar
 	public static Carta[] cartasEnJuego() {
 
-		Carta cartasVolteadas[] = new Carta[108];//Arreglo de cartas volteadas
-		int indice = IndiceUltimoElemento(cartas);
+		Carta cartasVolteadas[] = new Carta[108];  //Arreglo de cartas volteadas
+		int indice = IndiceUltimoElemento(cartas); //Obtenemos el ultimo indice de Cartas
 		
-		cartasVolteadas[0] = cartas[indice];
+		cartasVolteadas[0] = cartas[indice];       //Agregamos el objeto Carta de ese indice a cartasVolteadas
+		cartas[indice] = null;                     //Borramos ese indice
 
 		return cartasVolteadas;
 	}
@@ -263,89 +337,104 @@ public class Juego {
 	
 	//Imrime las cartas del jugador
 	public static void imprimirCartasJugador(int jugadorNumero, Jugador jugadores[]){
-		int cont = 0;
-		//System.out.println("\nCartas de " + jugadores[jugadorNumero].nombre +"\n");
+		System.out.print("\nCartas de " + jugadores[jugadorNumero].nombre +"\n");
 
+		int cont = 0;
 		for(int i = 0; jugadores[jugadorNumero].mazo[i] != null; i++){//Imprime las cartas del jugador en turno
 			cont++;
 		}
-		
-		String colorCarta = "";
-		
+
 		while(true){
-			for(int j = 0; j<cont; j++)
+
+			for(int j = 0; j < cont; j++){
 				System.out.print(" ________   ");
+				
+				if(j == 9){
+					break;
+				}
+			}
 			
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto != "CambioSentido")
 				 	System.out.print("|        |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido")
 					System.out.print("|   ^    |  ");
-
-				if(j==9){
+					
+				if(j == 9){
 					break;
 				}
+				
 				cartaEntrada++;
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "Normal")
 					System.out.print("|   "+jugadores[NumeroDeJugador].mazo[cartaEntrada].numero+"    |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "RobaDos")
 					System.out.print("|   +2   |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido")
 					System.out.print("|   ||   |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "PierdeTurno")
 					System.out.print("|  (/0)  |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor")
 					System.out.print("| Cambio |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor4")
 					System.out.print("| Cambio |  ");
-
-				if(j==9){
+					
+				if(j == 9){
 					break;
 				}
+				
 				cartaEntrada++;
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "Normal" 
 						|| jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "RobaDos" 
 						|| jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "PierdeTurno")
 					System.out.print("|        |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido")
 					System.out.print("|    v   |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor")
 					System.out.print("| Color  |  ");
-
+					
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor4")
 					System.out.print("| Color  |  ");
-
-
-				if(j==9){
+					
+				if(j == 9){
 					break;
 				}
-				cartaEntrada++;
+				
+				cartaEntrada++;	
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-
-
-			for(int j = 0; j<cont; j++){
-
-
+			
+			
+			for(int j = 0; j < cont; j++){
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "Normal"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -358,8 +447,11 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "RobaDos"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -372,9 +464,11 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "CambioSentido"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -387,9 +481,11 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "PierdeTurno"){
+					
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Azul"){
 						System.out.print("|  "+"Azul"+"  |  ");
 					}
@@ -402,38 +498,62 @@ public class Juego {
 					if(jugadores[NumeroDeJugador].mazo[cartaEntrada].color == "Rojo"){
 						System.out.print("|  "+"Rojo"+"  |  ");
 					}
+					
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor"){
 					System.out.print("|        |  ");
 				}
-
+				
 				if(jugadores[NumeroDeJugador].mazo[cartaEntrada].efecto == "C-CambioColor4"){
-					System.out.print("|   +4   |");
+					System.out.print("|   +4   |  ");
 				}
-
-				if(j==9){
+			
+				if(j == 9){
 					break;
 				}
+				
 				cartaEntrada++;
 			}
+			
 			cartaEntrada = 0;
 			System.out.println();
-			for(int j = 0; j<cont; j++){
+			
+			for(int j = 0; j < cont; j++){
 				System.out.print("|________|  ");
-				if(j==9){
+				
+				if(j == 9){
 					break;
 				}
 			}
+			
 			System.out.println();
-			cont=cont-10;
-			if(cont<=0){
+			
+			for(int j = 1; j <= cont; j++){
+				
+				if(j != 10){
+					System.out.print("    "+j+"       ");
+				}
+				
+				if(j == 10){
+					System.out.print("    "+10+"      ");
+				}
+				
+				if(j == 9){
+					break;
+				}	
+			}
+			
+			System.out.println();
+			
+			cont = cont - 10;
+			if(cont <= 0){
 				break;
 			}
 		}
 
 	}
-	
+
 	//Imprimir cartas del mazo principal
 	public static void imprimirCartasPrincipales(){
 		System.out.println("Cartas del mazo principal\n");
