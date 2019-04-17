@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class Juego {
+public class Juego4 {
 	
 	//Variables Globales
 	public static Carta cartas[] = new Carta[108];  //Se declara el arreglo cartas
@@ -16,6 +16,7 @@ public class Juego {
 		boolean comprobarCarta = true;                //Variable que compruebas si la carta se puede poner
 		int cartaEntrada;                              //Variable para ingresar la carta
 		int nDeCartaVolteada = 0;                      //Variable que controla el indice de cartasVolteadas
+		int colorElegido;                              //Variable para elegir el color de las cartas Cambio De Color
 		
 		cartas = barajarCartas();                      //Se declaran todas las cartas y se barajean
 		cartasVolteadas = cartasEnJuego();             //Inicia el juego con una carta volteada
@@ -33,9 +34,12 @@ public class Juego {
 				System.out.println("Carta en juego:");
 				System.out.println(cartasVolteadas[nDeCartaVolteada]);//Imprime la carta en juego
 				
+				
 				comprobarCarta = comprobarCartas(NumeroDeJugador, nDeCartaVolteada);
 				
-				if(comprobarCarta == true){
+				
+				
+				if(comprobarCarta == true || cartasVolteadas[nDeCartaVolteada].color == "Todos"){
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "Normal"){
 						System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
 						imprimirCartasJugador(NumeroDeJugador, jugadores);
@@ -64,40 +68,303 @@ public class Juego {
 								if(jugadores[NumeroDeJugador].mazo[i] == null)
 									break;
 							}
-						nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
+						//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
 						limpiarConsola();
 						}
 					
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "RobaDos"){
-						for(int i = 0; i < 2; i++){
-							System.out.print("RobaDos");
-							ganador = true;
+						System.out.println("RobaDos. ¡Ahora tienes dos cartas más!");
+						
+
+						for(int h = 0; h < 2; h++){
+
+							for(int i = 0; jugadores[NumeroDeJugador].mazo[i] != null; i++ ){
+
+								if(jugadores[NumeroDeJugador].mazo[i+1] == null){
+
+										for(int k = 107; cartas[k] == null || k>0; k--){
+
+											if(cartas[k] != null){
+												jugadores[NumeroDeJugador].mazo[i+1] = cartas[k];
+												cartas[k] = null;
+												break;
+											}
+										}
+										break;
+								}		
 							}
+							
+						}
+						
+						System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+						imprimirCartasJugador(NumeroDeJugador, jugadores);
+						
+						System.out.println("Ingrese una carta ");//Pide una carta al jugador
+						cartaEntrada=entrada.nextInt() - 1;
+
+						//Si la carta no es la correcta, le vuelve a pedir otra al jugador
+						//BUG con los comodines corregido
+						if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
+							while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
+									  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
+									System.out.println("No puedes poner esa carta, pon otra");
+									cartaEntrada = entrada.nextInt() - 1;
+								}
+						}
+
+						//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
+						cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
+						//Elimina la carta que eligio el jugador, de su mano
+						jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
+
+						//Recorre de posicion las cartas de la mano del jugador
+						for(int i = cartaEntrada; true; i++){
+							jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
+								if(jugadores[NumeroDeJugador].mazo[i] == null)
+									break;
+							}
+						//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
 						limpiarConsola();
 						}
 					
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "CambioSentido"){
 						System.out.print("CambioSentido");
-						ganador = true;
+						
+						int cont = jugadores.length - 1;
+						Jugador jAuxiliar[] = new Jugador[jugadores.length];
+						
+						for(int i = jugadores.length - 1; i > 0; i--){
+							jAuxiliar[i] = jugadores[i];
+						}
+						for(int i = 0; i < jugadores.length; i++){
+							jugadores[i] = jAuxiliar[cont];
+							cont--;
+						}
+						
+						
+						
+						System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+						imprimirCartasJugador(NumeroDeJugador, jugadores);
+						
+						System.out.println("Ingrese una carta ");//Pide una carta al jugador
+						cartaEntrada=entrada.nextInt() - 1;
+
+						//Si la carta no es la correcta, le vuelve a pedir otra al jugador
+						//BUG con los comodines corregido
+						if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
+							while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
+									  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
+									System.out.println("No puedes poner esa carta, pon otra");
+									cartaEntrada = entrada.nextInt() - 1;
+								}
+						}
+
+						//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
+						cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
+						//Elimina la carta que eligio el jugador, de su mano
+						jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
+
+						//Recorre de posicion las cartas de la mano del jugador
+						for(int i = cartaEntrada; true; i++){
+							jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
+								if(jugadores[NumeroDeJugador].mazo[i] == null)
+									break;
+							}
+						//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
 						limpiarConsola();
+						
+						
+						
 					}
 					
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "PierdeTurno"){
-						limpiarConsola();
-						System.out.print(jugadores[NumeroDeJugador].nombre + "Pierde su turno");
+						
+						System.out.println(jugadores[NumeroDeJugador].nombre + " Pierde su turno");
 						NumeroDeJugador++;
+						
+						try{
+							System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+							
+						} catch(Exception e) {
+							NumeroDeJugador = 0;
+							System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+						}
+
+						imprimirCartasJugador(NumeroDeJugador, jugadores);
+						
+						System.out.println("Ingrese una carta ");//Pide una carta al jugador
+						cartaEntrada=entrada.nextInt() - 1;
+
+						//Si la carta no es la correcta, le vuelve a pedir otra al jugador
+						//BUG con los comodines corregido
+						if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
+							while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
+									  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
+									System.out.println("No puedes poner esa carta, pon otra");
+									cartaEntrada = entrada.nextInt() - 1;
+								}
+						}
+
+						//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
+						cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
+						//Elimina la carta que eligio el jugador, de su mano
+						jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
+
+						//Recorre de posicion las cartas de la mano del jugador
+						for(int i = cartaEntrada; true; i++){
+							jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
+								if(jugadores[NumeroDeJugador].mazo[i] == null)
+									break;
+							}
+						//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
+						limpiarConsola();
 					}
 					
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "C-CambioColor"){
-						System.out.print("C-CambioColor");
-						ganador = true;
+						
+						while(true){
+							System.out.println("Elija el color. 1.- Azul, 2.- Amarillo, 3.- Verde, 4.- Rojo");
+							colorElegido = entrada.nextInt();
+							if(colorElegido == 1){
+								cartasVolteadas[nDeCartaVolteada].color = "Azul";
+								break;
+							}
+							if(colorElegido == 2){
+								cartasVolteadas[nDeCartaVolteada].color = "Amarillo";
+								break;
+							}
+							if(colorElegido == 3){
+								cartasVolteadas[nDeCartaVolteada].color = "Verde";
+								break;
+							}
+							if(colorElegido == 4){
+								cartasVolteadas[nDeCartaVolteada].color = "Rojo";
+								break;
+							}
+							if(colorElegido == 0 || colorElegido > 4){
+								System.out.println("Solo puedes meter los colores del 1 a 0, intenta otra vez");
+							}
+						}
+						limpiarConsola();
+						
+						System.out.println(cartasVolteadas[nDeCartaVolteada]);//Imprime la carta en juego
+						System.out.println("Cambio de color. El color ha sido cambiado por: " + cartasVolteadas[nDeCartaVolteada].color);
+						
+						System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+						imprimirCartasJugador(NumeroDeJugador, jugadores);
+						
+						System.out.println("Ingrese una carta ");//Pide una carta al jugador
+						cartaEntrada=entrada.nextInt() - 1;
+
+						//Si la carta no es la correcta, le vuelve a pedir otra al jugador
+						//BUG con los comodines corregido
+						if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
+							while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
+									  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
+									System.out.println("No puedes poner esa carta, pon otra");
+									cartaEntrada = entrada.nextInt() - 1;
+								}
+						}
+
+						//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
+						cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
+						//Elimina la carta que eligio el jugador, de su mano
+						jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
+
+						//Recorre de posicion las cartas de la mano del jugador
+						for(int i = cartaEntrada; true; i++){
+							jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
+								if(jugadores[NumeroDeJugador].mazo[i] == null)
+									break;
+							}
+						//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
+						limpiarConsola();
+						
 					}
 					
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "C-CambioColor4"){
-						System.out.print("C-CambioColor4");
-						ganador = true;
+						while(true){
+							System.out.println("Elija el color. 1.- Azul, 2.- Amarillo, 3.- Verde, 4.- Rojo");
+							colorElegido = entrada.nextInt();
+							if(colorElegido == 1){
+								cartasVolteadas[nDeCartaVolteada].color = "Azul";
+								break;
+							}
+							if(colorElegido == 2){
+								cartasVolteadas[nDeCartaVolteada].color = "Amarillo";
+								break;
+							}
+							if(colorElegido == 3){
+								cartasVolteadas[nDeCartaVolteada].color = "Verde";
+								break;
+							}
+							if(colorElegido == 4){
+								cartasVolteadas[nDeCartaVolteada].color = "Rojo";
+								break;
+							}
+							if(colorElegido == 0 || colorElegido > 4){
+								System.out.println("Solo puedes meter los colores del 1 a 0, intenta otra vez");
+							}
+						}
+						limpiarConsola();
+						
+						for(int h = 0; h < 4; h++){
+
+							for(int i = 0; jugadores[NumeroDeJugador].mazo[i] != null; i++ ){
+
+								if(jugadores[NumeroDeJugador].mazo[i+1] == null){
+
+										for(int k = 107; cartas[k] == null || k>0; k--){
+
+											if(cartas[k] != null){
+												jugadores[NumeroDeJugador].mazo[i+1] = cartas[k];
+												cartas[k] = null;
+												break;
+											}
+										}
+										break;
+								}		
+							}
+							
+						}
+						
+						System.out.println(cartasVolteadas[nDeCartaVolteada]);//Imprime la carta en juego
+						System.out.println("Cambio de color +4. El color ha sido cambiado por: " + cartasVolteadas[nDeCartaVolteada].color 
+								+ ". ¡Y ahora tienes 4 cartas más!");
+						
+						System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+						imprimirCartasJugador(NumeroDeJugador, jugadores);
+						
+						System.out.println("Ingrese una carta ");//Pide una carta al jugador
+						cartaEntrada=entrada.nextInt() - 1;
+
+						//Si la carta no es la correcta, le vuelve a pedir otra al jugador
+						//BUG con los comodines corregido
+						if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
+							while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
+									  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
+									System.out.println("No puedes poner esa carta, pon otra");
+									cartaEntrada = entrada.nextInt() - 1;
+								}
+						}
+
+						//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
+						cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
+						//Elimina la carta que eligio el jugador, de su mano
+						jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
+
+						//Recorre de posicion las cartas de la mano del jugador
+						for(int i = cartaEntrada; true; i++){
+							jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
+								if(jugadores[NumeroDeJugador].mazo[i] == null)
+									break;
+							}
+						//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
+						limpiarConsola();
+						
 					}
-					
+				
+					nDeCartaVolteada++;
 				}else{
 					System.out.print("No tienes ninguna carta valida");
 					ganador = true;
@@ -105,7 +372,6 @@ public class Juego {
 			}
 		}
 	}
-
 	//Comprueba si el jugador tiene cartas para poner
 	public static boolean comprobarCartas(int indiceJugador, int indiceCartaEnJuego){
 		boolean respuesta;
