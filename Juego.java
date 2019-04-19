@@ -38,13 +38,13 @@ public class Juego {
 					while(jugadores[ganar].mazo[contarCartas] != null){
 						contarCartas++;
 					}
-					if(contarCartas == 0){
+					if(contarCartas == 1){
 						System.out.println(jugadores[ganar].nombre + " dice UNO!!! y gana el juego");
 						ganador = true;
 						break; //Termina el for
 					}
 				}
-				if(contarCartas == 0){
+				if(contarCartas == 1){
 					break; //Termina el for de los turnos
 				}
 				
@@ -144,72 +144,75 @@ public class Juego {
 						limpiarConsola();
 						}
 					
+					//Cambiar sentido
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "CambioSentido"){
-						System.out.println("CambioSentido");
+						System.out.println("Se ha cambiado el sentido!!!");
 						
-						int cont = NumeroDeJugador - 2;
-						Jugador jAuxiliar[] = new Jugador[jugadores.length];
-						
-						for(int i = 0; i < jugadores.length; i++){
-							jAuxiliar[i] = jugadores[i];
-						}
-					
-						for(int i = 0; i < jugadores.length; i++){
-							if(cont >= 0){
-								jugadores[i] = jAuxiliar[cont];
-								
-							} 
-							if(cont < 0){
-								
-								if(NumeroDeJugador != 0){
-									cont = jugadores.length - 1;
-								}
-								
-								if(NumeroDeJugador == 0){
-									cont = jugadores.length - 2;
-									NumeroDeJugador++;
-								}
-								jugadores[i] = jAuxiliar[cont];
-								
+						if(jugadores.length == 2){
+							System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
+							imprimirCartasJugador(NumeroDeJugador, jugadores);
+							
+							System.out.println("Ingrese una carta ");//Pide una carta al jugador
+							cartaEntrada=entrada.nextInt() - 1;
+
+							//Si la carta no es la correcta, le vuelve a pedir otra al jugador
+							//BUG con los comodines corregido
+							if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
+								while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
+										  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
+										System.out.println("No puedes poner esa carta, pon otra");
+										cartaEntrada = entrada.nextInt() - 1;
+									}
 							}
-							cont--;
-						}
-						
-						NumeroDeJugador = 0;
-						
-						
-						System.out.println("Turno de " + jugadores[NumeroDeJugador].nombre + "\nTus cartas: ");
-						imprimirCartasJugador(NumeroDeJugador, jugadores);
-						
-						System.out.println("Ingrese una carta ");//Pide una carta al jugador
-						cartaEntrada=entrada.nextInt() - 1;
 
-						//Si la carta no es la correcta, le vuelve a pedir otra al jugador
-						//BUG con los comodines corregido
-						if(jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != 10){
-							while(jugadores[NumeroDeJugador].mazo[cartaEntrada].color != cartasVolteadas[nDeCartaVolteada].color && 
-									  jugadores[NumeroDeJugador].mazo[cartaEntrada].numero != cartasVolteadas[nDeCartaVolteada].numero){
-									System.out.println("No puedes poner esa carta, pon otra");
-									cartaEntrada = entrada.nextInt() - 1;
+							//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
+							cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
+							//Elimina la carta que eligio el jugador, de su mano
+							jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
+
+							//Recorre de posicion las cartas de la mano del jugador
+							for(int i = cartaEntrada; true; i++){
+								jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
+									if(jugadores[NumeroDeJugador].mazo[i] == null)
+										break;
 								}
-						}
-
-						//Agrega la carta que eligio el jugador, a el mazo cartasVolteadas		
-						cartasVolteadas[nDeCartaVolteada + 1]=jugadores[NumeroDeJugador].mazo[cartaEntrada];
-						//Elimina la carta que eligio el jugador, de su mano
-						jugadores[NumeroDeJugador].mazo[cartaEntrada] = null;
-
-						//Recorre de posicion las cartas de la mano del jugador
-						for(int i = cartaEntrada; true; i++){
-							jugadores[NumeroDeJugador].mazo[i] = jugadores[NumeroDeJugador].mazo[i+1];
-								if(jugadores[NumeroDeJugador].mazo[i] == null)
-									break;
+							//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
+							limpiarConsola();
+							
+						}else{
+							if(NumeroDeJugador == 0){
+								//Odenar de mayor a menor
+								Jugador[] ordenar = new Jugador[jugadores.length]; //Arreglo de jugadores aux
+								int cont = 0;
+								for(int j = jugadores.length - 1; j >= 0; j--){
+									ordenar[cont] = jugadores[j];
+									cont++;
+								}
+								
+								jugadores = ordenar;
+								cartasVolteadas[nDeCartaVolteada].efecto = "Normal";
+								break; //Reinicia el for que pasa los turnos
+								
+							}else{
+								Jugador[] ordenar = new Jugador[jugadores.length]; //Arreglo de jugadores aux
+								//Contadores auxiliares
+								int cont = jugadores.length - 1;
+								int aux = NumeroDeJugador;
+								
+								while(ordenar[aux] == null){
+									ordenar[aux] = jugadores[cont];
+									if(aux == jugadores.length - 1){
+										aux = -1;
+									}
+									aux++;
+									cont--;
+								}
+								cartasVolteadas[nDeCartaVolteada].efecto = "Normal";
+								jugadores = ordenar;
+								break; //Reinicia el for que pasa los turnos
 							}
-						//nDeCartaVolteada++;  //Agrega +1 para acceder al siguente indice de cartasVolteadas
-						limpiarConsola();
-						
-						
-						
+							
+						}
 					}
 					
 					if(cartasVolteadas[nDeCartaVolteada].efecto == "PierdeTurno"){
@@ -633,7 +636,7 @@ public class Juego {
 		int ultimoIndiceCartas = IndiceUltimoElemento(cartas);//Numero de objeto del arreglo cartas
 		int ultimoIndiceMazoJugador = 0;//Numero de objeto del mazo, dentro del arreglo jugador
 		//Le damos cartas a cada jugador
-		for(int i = 1; i <= 20; i++){
+		for(int i = 1; i <= 7; i++){
 			for(int j = 0; j < crearJugadgores.length; j++){
 				crearJugadgores[j].mazo[ultimoIndiceMazoJugador] = cartas[ultimoIndiceCartas];
 				cartas[ultimoIndiceCartas] = null;
@@ -914,3 +917,5 @@ public class Juego {
 						 "Por Yael y Erik\n\n");
 	}
 }
+
+
