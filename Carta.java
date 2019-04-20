@@ -1,8 +1,7 @@
-
 public class Carta {
-	private String color;
-	private int numero;
-	private String efecto;
+	public String color;
+	public int numero;
+	public String efecto;
 	
 	/*
 	 Efectos
@@ -22,18 +21,22 @@ public class Carta {
 			colorCarta+=" ";
 		colorCarta = color + colorCarta + "|";
 		
-		if(efecto == "Normal")
-			efectoCarta = "        |\n|   " + numero +"    |\n|        |\n" + "|" + colorCarta;
-		if(efecto == "RobaDos")
-			efectoCarta = "        |\n|   +2   |\n|        |\n" + "|" + colorCarta;
-		if(efecto == "CambioSentido")
+		if(efecto == "Normal" && numero == 10){
 			efectoCarta = "   ^    |\n|   ||   |\n|    v   |\n" + "|" + colorCarta;
-		if(efecto == "PierdeTurno")
-			efectoCarta = "        |\n|  (/0)  |\n|        |\n" + "|" + colorCarta;
-		if(efecto == "C-CambioColor")
-			efectoCarta = "        |\n| Cambio |\n| Color  |\n|        |";
-		if(efecto == "C-CambioColor4")
-			efectoCarta = "        |\n| Cambio |\n| Color  |\n|   +4   |";
+		}else{
+			if(efecto == "Normal")
+				efectoCarta = "        |\n|   " + numero +"    |\n|        |\n" + "|" + colorCarta;
+			if(efecto == "RobaDos")
+				efectoCarta = "        |\n|   +2   |\n|        |\n" + "|" + colorCarta;
+			if(efecto == "CambioSentido")
+				efectoCarta = "   ^    |\n|   ||   |\n|    v   |\n" + "|" + colorCarta;
+			if(efecto == "PierdeTurno")
+				efectoCarta = "        |\n|  (/0)  |\n|        |\n" + "|" + colorCarta;
+			if(efecto == "C-CambioColor")
+				efectoCarta = "        |\n| Cambio |\n| Color  |\n|        |";
+			if(efecto == "C-CambioColor4")
+				efectoCarta = "        |\n| Cambio |\n| Color  |\n|   +4   |";
+		}
 		
 		String mensaje = " ________\n"
 			           + "|" + efectoCarta + "\n"
@@ -48,5 +51,6 @@ public class Carta {
 		this.color = color;
 		this.numero = numero;
 		this.efecto = efecto;
+		
 	}
 }
